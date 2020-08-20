@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const logger = require("morgan");
 const mongoose = require("mongoose");
@@ -17,9 +18,14 @@ app.use(express.json());
 
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost/budgetDB", {
+let uri = "mongodb://localhost/budgetDB";
+if (process.env.NODE_ENV === "production") {
+  uri = process.env.MONGODB_URI;
+}
+
+mongoose.connect(uri, {
   useNewUrlParser: true,
-  useFindAndModify: false
+  useUnifiedTopology: true
 });
 
 // routes
